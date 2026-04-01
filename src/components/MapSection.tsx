@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchPetaData, KATEGORI_INFO, type Kategori, type PerusahaanRow } from "@/lib/api";
 import { MapPin } from "lucide-react";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 
 const KATEGORI_LIST: Kategori[] = ["LTS", "LTT", "LTU"];
 
 export default function MapSection() {
-  const [mounted, setMounted] = useState(false);
-
   const queries = KATEGORI_LIST.map(k =>
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useQuery({ queryKey: ["peta", k], queryFn: () => fetchPetaData(k), staleTime: 10 * 60 * 1000 })
@@ -15,12 +15,6 @@ export default function MapSection() {
 
   const isLoading = queries.some(q => q.isLoading);
   const allData = queries.flatMap(q => q.data || []);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
 
   return (
     <div className="space-y-4 animate-slide-up">
@@ -51,57 +45,63 @@ export default function MapSection() {
 }
 
 function LeafletMap({ data }: { data: PerusahaanRow[] }) {
-  const [mapReady, setMapReady] = useState(false);
-  const [MapComponents, setMapComponents] = useState<any>(null);
+  const mapRef = useRef<HTMLDivElement>(null);
+  const mapInstance = useRef<L.Map | null>(null);
 
   useEffect(() => {
-    import("react-leaflet").then(mod => {
-      setMapComponents(mod);
-      setMapReady(true);
-    });
-    import("leaflet/dist/leaflet.css");
+    if (!mapRef.current || mapInstance.current) return;
+
+    const map = L.map(mapRef.current).setView([-7.2, 110.0], 8);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "&copy; OpenStreetMap",
+    }).addTo(map);
+
+    mapInstance.current = map;
+
+    return () => {
+      map.remove();
+      mapInstance.current = null;
+    };
   }, []);
 
-  if (!mapReady || !MapComponents) return null;
+  useEffect(() => {
+    const map = mapInstance.current;
+    if (!map) return;
 
-  const { MapContainer, TileLayer, CircleMarker, Popup } = MapComponents;
+    const colorMap: Record<string, string> = {
+      LTS: "#2e9d5c",
+      LTT: "#e8a020",
+      LTU: "#d32f2f",
+    };
 
-  const colorMap: Record<string, string> = {
-    LTS: "hsl(152 60% 38%)",
-    LTT: "hsl(36 95% 55%)",
-    LTU: "hsl(0 72% 51%)",
-  };
+    const markers: L.CircleMarker[] = [];
 
-  return (
-    <MapContainer center={[-7.2, 110.0]} zoom={8} style={{ height: "100%", width: "100%" }}>
-      <TileLayer
-        attribution='&copy; OpenStreetMap'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      {data.map((row, i) => {
-        const koordinat = row.Koordinat;
-        if (!koordinat) return null;
-        const parts = koordinat.split(",");
-        if (parts.length !== 2) return null;
-        const lat = parseFloat(parts[0]);
-        const lng = parseFloat(parts[1]);
-        if (isNaN(lat) || isNaN(lng)) return null;
+    data.forEach(row => {
+      const koordinat = row.Koordinat;
+      if (!koordinat) return;
+      const parts = koordinat.split(",");
+      if (parts.length !== 2) return;
+      const lat = parseFloat(parts[0]);
+      const lng = parseFloat(parts[1]);
+      if (isNaN(lat) || isNaN(lng)) return;
 
-        return (
-          <CircleMarker
-            key={i}
-            center={[lat, lng]}
-            radius={6}
-            pathOptions={{ color: colorMap[row.kategori || "LTS"], fillOpacity: 0.8 }}
-          >
-            <Popup>
-              <b>{row["Nama Perusahaan/Farm"] || "-"}</b><br />
-              {row["Nama Kab/Kota"]}<br />
-              {row.kategori}
-            </Popup>
-          </CircleMarker>
-        );
-      })}
-    </MapContainer>
-  );
+      const marker = L.circleMarker([lat, lng], {
+        radius: 6,
+        color: colorMap[row.kategori || "LTS"],
+        fillOpacity: 0.8,
+      }).addTo(map);
+
+      marker.bindPopup(
+        `<b>${row["Nama Perusahaan/Farm"] || "-"}</b><br/>${row["Nama Kab/Kota"] || ""}<br/>${row.kategori || ""}`
+      );
+
+      markers.push(marker);
+    });
+
+    return () => {
+      markers.forEach(m => map.removeLayer(m));
+    };
+  }, [data]);
+
+  return <div ref={mapRef} style={{ height: "100%", width: "100%" }} />;
 }
