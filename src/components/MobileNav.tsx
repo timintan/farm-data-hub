@@ -16,10 +16,10 @@ const SUB_ITEMS_PETERNAKAN = [
 
 const SUB_ITEMS_LPTB = [
   { id: "data", label: "Data Monitoring", icon: Database },
+  { id: "pemotongan", label: "Data Pemotongan", icon: FileText },
   { id: "peta", label: "Peta", icon: Map },
   { id: "grafik", label: "Grafik", icon: PieChart },
   { id: "rekap", label: "Rekap", icon: FileText },
-  { id: "pemotongan", label: "Data Pemotongan", icon: FileText },
   { id: "anomali", label: "Anomali Data", icon: AlertTriangle },
 ];
 
