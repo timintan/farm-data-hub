@@ -6,7 +6,7 @@ interface Props {
   onTabChange: (tab: string) => void;
 }
 
-const SUB_ITEMS = [
+const SUB_ITEMS_PETERNAKAN = [
   { id: "data", label: "Data Monitoring", icon: Database },
   { id: "peta", label: "Peta", icon: Map },
   { id: "grafik", label: "Grafik", icon: PieChart },
@@ -14,9 +14,18 @@ const SUB_ITEMS = [
   { id: "anomali", label: "Anomali Data", icon: AlertTriangle },
 ];
 
+const SUB_ITEMS_LPTB = [
+  { id: "data", label: "Data Monitoring", icon: Database },
+  { id: "peta", label: "Peta", icon: Map },
+  { id: "grafik", label: "Grafik", icon: PieChart },
+  { id: "rekap", label: "Rekap", icon: FileText },
+  { id: "pemotongan", label: "Data Pemotongan", icon: FileText },
+  { id: "anomali", label: "Anomali Data", icon: AlertTriangle },
+];
+
 const GROUPS = [
-  { id: "peternakan", label: "Perusahaan Peternakan", icon: Building2 },
-  { id: "lptb", label: "LPTB", icon: ClipboardList },
+  { id: "peternakan", label: "Perusahaan Peternakan", icon: Building2, subItems: SUB_ITEMS_PETERNAKAN },
+  { id: "lptb", label: "LPTB", icon: ClipboardList, subItems: SUB_ITEMS_LPTB },
 ];
 
 export default function DashboardSidebar({ activeTab, onTabChange }: Props) {
@@ -77,7 +86,7 @@ export default function DashboardSidebar({ activeTab, onTabChange }: Props) {
               </button>
               {isOpen && (
                 <div className="mt-1 ml-2 pl-2 border-l border-sidebar-border space-y-1">
-                  {SUB_ITEMS.map(item => {
+                  {group.subItems.map(item => {
                     const Icon = item.icon;
                     const tabId = `${group.id}-${item.id}`;
                     const isActive = activeTab === tabId;

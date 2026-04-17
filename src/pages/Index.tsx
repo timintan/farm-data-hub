@@ -20,6 +20,7 @@ const TITLES: Record<string, string> = {
   "lptb-peta": "Peta Sebaran · LPTB",
   "lptb-grafik": "Grafik & Statistik · LPTB",
   "lptb-rekap": "Rekap Data · LPTB",
+  "lptb-pemotongan": "Data Pemotongan · LPTB",
   "lptb-anomali": "Anomali Data · LPTB",
 };
 
