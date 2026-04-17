@@ -7,10 +7,10 @@ interface Props {
 }
 
 const SUB_ITEMS = [
+  { id: "data", label: "Data Monitoring", icon: Database },
   { id: "peta", label: "Peta", icon: Map },
   { id: "grafik", label: "Grafik", icon: PieChart },
   { id: "rekap", label: "Rekap", icon: FileText },
-  { id: "data", label: "Data Monitoring", icon: Database },
   { id: "anomali", label: "Anomali Data", icon: AlertTriangle },
 ];
 
