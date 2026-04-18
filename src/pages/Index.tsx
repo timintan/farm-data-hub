@@ -8,6 +8,7 @@ import MapSection from "@/components/MapSection";
 import ChartSection from "@/components/ChartSection";
 import RekapSection from "@/components/RekapSection";
 import AnomalySection from "@/components/AnomalySection";
+import LptbDirektoriSection from "@/components/LptbDirektoriSection";
 
 const TITLES: Record<string, string> = {
   dashboard: "Dashboard Overview",
@@ -16,6 +17,7 @@ const TITLES: Record<string, string> = {
   "peternakan-grafik": "Grafik & Statistik · Perusahaan Peternakan",
   "peternakan-rekap": "Rekap Data · Perusahaan Peternakan",
   "peternakan-anomali": "Anomali Data · Perusahaan Peternakan",
+  "lptb-direktori": "Direktori · LPTB",
   "lptb-data": "Data Monitoring · LPTB",
   "lptb-peta": "Peta Sebaran · LPTB",
   "lptb-grafik": "Grafik & Statistik · LPTB",
@@ -57,6 +59,7 @@ export default function Index() {
     }
 
     if (group === "lptb") {
+      if (sub === "direktori") return <LptbDirektoriSection />;
       return <ComingSoon label={`LPTB · ${sub.charAt(0).toUpperCase() + sub.slice(1)}`} />;
     }
 
