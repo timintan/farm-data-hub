@@ -78,9 +78,9 @@ async function fetchDirektori(): Promise<DirektoriRow[]> {
 }
 
 const STATUS_LABEL: Record<string, { label: string; cls: string }> = {
-  "1": { label: "Aktif", cls: "bg-success/10 text-success" },
-  "2": { label: "Non-Aktif", cls: "bg-muted text-muted-foreground" },
-  "3": { label: "Pemerintah", cls: "bg-primary/10 text-primary" },
+  "1": { label: "RPH", cls: "bg-success/10 text-success" },
+  "2": { label: "TPH", cls: "bg-muted text-muted-foreground" },
+  "3": { label: "Dinas", cls: "bg-primary/10 text-primary" },
 };
 
 export default function LptbDirektoriSection() {
@@ -152,13 +152,13 @@ export default function LptbDirektoriSection() {
         <StatCard icon={<MapPin size={18} />} label="Kab/Kota" value={kabList.length} />
         <StatCard
           icon={<Building2 size={18} />}
-          label="Aktif"
+          label="RPH"
           value={data?.filter(r => r.r109 === "1").length ?? 0}
           accent="text-success"
         />
         <StatCard
           icon={<Building2 size={18} />}
-          label="Non-Aktif"
+          label="TPH"
           value={data?.filter(r => r.r109 === "2").length ?? 0}
           accent="text-muted-foreground"
         />
