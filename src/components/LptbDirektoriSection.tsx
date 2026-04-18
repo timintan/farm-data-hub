@@ -149,7 +149,7 @@ export default function LptbDirektoriSection() {
       {/* Header stat */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <StatCard icon={<Building2 size={18} />} label="Total RPH/LPTB" value={data?.length ?? 0} />
-        <StatCard icon={<MapPin size={18} />} label="Kab/Kota" value={kabList.length} />
+        <StatCard icon={<MapPin size={18} />} label="Dinas" value={data?.filter(r => r.r109 === "3").length ?? 0} accent="text-success"/>
         <StatCard
           icon={<Building2 size={18} />}
           label="RPH"
