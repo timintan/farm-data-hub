@@ -1,4 +1,4 @@
-import { BarChart3, Database, Map, PieChart, FileText, AlertTriangle, Menu, X, ChevronDown, Building2, ClipboardList } from "lucide-react";
+import { BarChart3, Database, Map, PieChart, FileText, AlertTriangle, Menu, X, ChevronDown, Building2, ClipboardList, BookUser } from "lucide-react";
 import { useState } from "react";
 
 interface Props {
@@ -15,6 +15,7 @@ const SUB_ITEMS_PETERNAKAN = [
 ];
 
 const SUB_ITEMS_LPTB = [
+  { id: "direktori", label: "Direktori", icon: BookUser },
   { id: "data", label: "Data Monitoring", icon: Database },
   { id: "pemotongan", label: "Data Pemotongan", icon: FileText },
   { id: "peta", label: "Peta", icon: Map },
